@@ -1,203 +1,251 @@
 'use client';
 
-import Link from 'next/link';
+import { useState } from 'react';
 import {
-  MapPin, Phone, Mail, Clock, Send, CheckCircle2,
-  Facebook, Instagram, Youtube,
+  MapPin,
+  Phone,
+  Mail,
+  Clock,
+  Send,
 } from 'lucide-react';
-import SiteLayout from '@/components/site/SiteLayout';
-import { SectionHeading } from '@/components/site/SectionHeading';
-import { useFormSubmit } from '@/hooks/use-form-submit';
 
 const contactInfo = [
-  { icon: MapPin, label: 'Alamat', value: 'Jl. Sawah Subur No. 26, Patani, Sulawesi Selatan', href: '#' },
-  { icon: Phone, label: 'Telepon', value: '+62 812-3456-7890', href: 'tel:+6281234567890' },
-  { icon: Mail, label: 'Email', value: 'info@beraspatani26.id', href: 'mailto:info@beraspatani26.id' },
-  { icon: Clock, label: 'Jam Operasional', value: 'Senin–Sabtu: 08.00–17.00 WTA', href: null },
+  {
+    title: 'Alamat',
+    value:
+      'Kp. Cikeris Rt. 001 Rw. 016 Ds. Simpen Kidul Kec. BL. Limbangan Kab. Garut, Jawa Barat',
+    icon: MapPin,
+  },
+  {
+    title: 'Telepon',
+    value: '081572316412',
+    icon: Phone,
+  },
+  {
+    title: 'Email',
+    value: 'Beraspatani26@gmail.com',
+    icon: Mail,
+  },
+  {
+    title: 'Jam Operasional',
+    value: '07.00–20.00',
+    icon: Clock,
+  },
 ];
 
 export default function KontakPage() {
-  const { status, message, submit } = useFormSubmit();
+  const [form, setForm] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    subject: '',
+    message: '',
+  });
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  function handleChange(
+    field: keyof typeof form,
+    value: string
+  ) {
+    setForm((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
+  }
+
+  function handleSubmit(
+    e: React.FormEvent<HTMLFormElement>
+  ) {
     e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const data = Object.fromEntries(formData.entries());
-    submit(data);
-  };
+
+    alert(
+      'Pesan berhasil disiapkan. Integrasi pengiriman dapat ditambahkan berikutnya.'
+    );
+  }
 
   return (
-    <SiteLayout>
-      <section className="bg-hero-gradient text-white py-16">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <SectionHeading
-            eyebrow="Kontak"
-            title="Hubungi Kami"
-            description="Ada pertanyaan? Tim kami siap membantu Anda."
-            className="[&_h2]:text-white [&_p]:text-white/70 [&_span]:text-accent"
-          />
+    <main className="min-h-screen bg-[#f8f7f2] px-4 py-12">
+      <div className="mx-auto max-w-6xl">
+
+        <div className="mb-10 text-center">
+          <p className="text-sm font-bold tracking-wider text-emerald-700">
+            HUBUNGI KAMI
+          </p>
+
+          <h1 className="mt-2 text-3xl font-bold text-gray-900 md:text-4xl">
+            Kontak BerasPatani26
+          </h1>
+
+          <p className="mx-auto mt-3 max-w-2xl text-gray-500">
+            Hubungi kami untuk informasi produk, pemesanan,
+            kemitraan, atau kebutuhan lainnya.
+          </p>
         </div>
-      </section>
 
-      <section className="py-12">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-12">
-            {/* Contact Info */}
-            <div className="space-y-6">
-              <div className="space-y-4">
-                {contactInfo.map((info) => {
-                  const content = (
-                    <div className="flex items-start gap-4 rounded-xl border border-border bg-card p-5 hover:shadow-md transition-shadow">
-                      <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 text-primary shrink-0">
-                        <info.icon className="h-6 w-6" />
-                      </div>
-                      <div>
-                        <p className="text-sm text-muted-foreground mb-1">{info.label}</p>
-                        <p className="font-medium">{info.value}</p>
-                      </div>
-                    </div>
-                  );
-                  return info.href ? (
-                    <a key={info.label} href={info.href} className="block">{content}</a>
-                  ) : (
-                    <div key={info.label}>{content}</div>
-                  );
-                })}
-              </div>
+        <div className="grid gap-8 lg:grid-cols-2">
 
-              {/* Map placeholder */}
-              <div className="rounded-xl border border-border bg-card overflow-hidden">
-                <div className="aspect-[16/10] bg-hero-gradient flex items-center justify-center relative">
-                  <div className="absolute inset-0 bg-grid-pattern opacity-10" />
-                  <div className="relative text-center space-y-2">
-                    <MapPin className="h-12 w-12 mx-auto text-accent" />
-                    <p className="text-white font-medium">Patani, Sulawesi Selatan</p>
-                    <p className="text-white/60 text-sm">Peta lokasi akan tersedia segera</p>
+          {/* INFORMASI KONTAK */}
+          <div className="space-y-4">
+
+            {contactInfo.map((item) => {
+              const Icon = item.icon;
+
+              return (
+                <div
+                  key={item.title}
+                  className="flex items-start gap-4 rounded-2xl border border-gray-200 bg-white p-5 shadow-sm"
+                >
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-emerald-100">
+                    <Icon className="h-6 w-6 text-emerald-700" />
+                  </div>
+
+                  <div>
+                    <p className="text-sm font-medium text-emerald-700">
+                      {item.title}
+                    </p>
+
+                    <p className="mt-1 leading-6 text-gray-900">
+                      {item.value}
+                    </p>
                   </div>
                 </div>
-              </div>
+              );
+            })}
 
-              {/* Social */}
-              <div className="flex gap-3">
-                <a href="#" className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary hover:bg-primary hover:text-primary-foreground transition-colors" aria-label="Facebook">
-                  <Facebook className="h-5 w-5" />
-                </a>
-                <a href="#" className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary hover:bg-primary hover:text-primary-foreground transition-colors" aria-label="Instagram">
-                  <Instagram className="h-5 w-5" />
-                </a>
-                <a href="#" className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary hover:bg-primary hover:text-primary-foreground transition-colors" aria-label="YouTube">
-                  <Youtube className="h-5 w-5" />
-                </a>
-              </div>
+            <div className="rounded-2xl border border-gray-200 bg-emerald-900 p-6 text-white">
+              <h2 className="text-xl font-bold">
+                BerasPatani26
+              </h2>
+
+              <p className="mt-2 text-sm leading-6 text-emerald-100">
+                Gabah • Beras • Hasil Panen
+              </p>
+
+              <p className="mt-5 text-sm leading-6 text-emerald-50">
+                Kami melayani kebutuhan pembelian gabah dan beras
+                untuk pelanggan pribadi, toko, usaha, restoran,
+                grosir, maupun distributor.
+              </p>
             </div>
 
-            {/* Contact Form */}
-            <div>
-              {status === 'success' ? (
-                <div className="rounded-2xl bg-green-50 border border-green-200 p-8 text-center space-y-4 animate-scale-in">
-                  <div className="flex h-16 w-16 items-center justify-center rounded-full bg-green-100 mx-auto">
-                    <CheckCircle2 className="h-8 w-8 text-green-600" />
-                  </div>
-                  <h3 className="text-xl font-bold text-green-800">Pesan Terkirim!</h3>
-                  <p className="text-green-700">{message}</p>
-                  <button
-                    onClick={() => window.location.reload()}
-                    className="px-4 py-2 rounded-lg bg-green-600 text-white text-sm font-medium hover:bg-green-700 transition-colors"
-                  >
-                    Kirim pesan lain
-                  </button>
-                </div>
-              ) : (
-                <form onSubmit={handleSubmit} className="space-y-5 rounded-2xl bg-card border border-border p-6 sm:p-8">
-                  <h3 className="text-xl font-bold">Kirim Pesan</h3>
-
-                  <div className="space-y-1.5">
-                    <label className="text-sm font-medium">Nama Lengkap *</label>
-                    <input
-                      required
-                      name="name"
-                      type="text"
-                      placeholder="Nama Anda"
-                      className="w-full px-4 py-2.5 rounded-lg border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
-                    />
-                  </div>
-
-                  <div className="grid sm:grid-cols-2 gap-4">
-                    <div className="space-y-1.5">
-                      <label className="text-sm font-medium">Email *</label>
-                      <input
-                        required
-                        name="email"
-                        type="email"
-                        placeholder="email@anda.com"
-                        className="w-full px-4 py-2.5 rounded-lg border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
-                      />
-                    </div>
-                    <div className="space-y-1.5">
-                      <label className="text-sm font-medium">No. Telepon *</label>
-                      <input
-                        required
-                        name="phone"
-                        type="tel"
-                        placeholder="08xxxxxxxxxx"
-                        className="w-full px-4 py-2.5 rounded-lg border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="space-y-1.5">
-                    <label className="text-sm font-medium">Subjek *</label>
-                    <input
-                      required
-                      name="subject"
-                      type="text"
-                      placeholder="Topik pesan Anda"
-                      className="w-full px-4 py-2.5 rounded-lg border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
-                    />
-                  </div>
-
-                  <div className="space-y-1.5">
-                    <label className="text-sm font-medium">Pesan *</label>
-                    <textarea
-                      required
-                      name="message"
-                      rows={5}
-                      placeholder="Tulis pesan Anda..."
-                      className="w-full px-4 py-2.5 rounded-lg border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary resize-none"
-                    />
-                  </div>
-
-                  {status === 'error' && (
-                    <div className="rounded-lg bg-destructive/10 border border-destructive/20 px-4 py-3 text-sm text-destructive">
-                      {message}
-                    </div>
-                  )}
-
-                  <button
-                    type="submit"
-                    disabled={status === 'submitting'}
-                    className="w-full inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-primary text-primary-foreground font-semibold hover:bg-primary/90 transition-all disabled:opacity-60 disabled:cursor-not-allowed"
-                  >
-                    {status === 'submitting' ? (
-                      <>
-                        <div className="h-5 w-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                        Mengirim...
-                      </>
-                    ) : (
-                      <>
-                        <Send className="h-4 w-4" /> Kirim Pesan
-                      </>
-                    )}
-                  </button>
-                  <p className="text-xs text-center text-muted-foreground">
-                    * Data dikirim secara simulasi (belum tersimpan ke database)
-                  </p>
-                </form>
-              )}
-            </div>
           </div>
+
+          {/* FORM KONTAK */}
+          <div className="rounded-3xl border border-gray-200 bg-white p-7 shadow-sm">
+
+            <h2 className="text-2xl font-bold text-gray-900">
+              Kirim Pesan
+            </h2>
+
+            <p className="mt-2 text-sm text-gray-500">
+              Isi formulir berikut dan sampaikan kebutuhan Anda.
+            </p>
+
+            <form
+              onSubmit={handleSubmit}
+              className="mt-7 space-y-5"
+            >
+              <div>
+                <label className="mb-2 block text-sm font-semibold text-gray-700">
+                  Nama Lengkap *
+                </label>
+
+                <input
+                  required
+                  type="text"
+                  value={form.name}
+                  onChange={(e) =>
+                    handleChange('name', e.target.value)
+                  }
+                  placeholder="Nama Anda"
+                  className="w-full rounded-xl border border-gray-300 px-4 py-3 outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100"
+                />
+              </div>
+
+              <div className="grid gap-5 md:grid-cols-2">
+
+                <div>
+                  <label className="mb-2 block text-sm font-semibold text-gray-700">
+                    Email *
+                  </label>
+
+                  <input
+                    required
+                    type="email"
+                    value={form.email}
+                    onChange={(e) =>
+                      handleChange('email', e.target.value)
+                    }
+                    placeholder="email@anda.com"
+                    className="w-full rounded-xl border border-gray-300 px-4 py-3 outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100"
+                  />
+                </div>
+
+                <div>
+                  <label className="mb-2 block text-sm font-semibold text-gray-700">
+                    No. Telepon *
+                  </label>
+
+                  <input
+                    required
+                    type="tel"
+                    value={form.phone}
+                    onChange={(e) =>
+                      handleChange('phone', e.target.value)
+                    }
+                    placeholder="08xxxxxxxxxx"
+                    className="w-full rounded-xl border border-gray-300 px-4 py-3 outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100"
+                  />
+                </div>
+
+              </div>
+
+              <div>
+                <label className="mb-2 block text-sm font-semibold text-gray-700">
+                  Subjek *
+                </label>
+
+                <input
+                  required
+                  type="text"
+                  value={form.subject}
+                  onChange={(e) =>
+                    handleChange('subject', e.target.value)
+                  }
+                  placeholder="Topik pesan Anda"
+                  className="w-full rounded-xl border border-gray-300 px-4 py-3 outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100"
+                />
+              </div>
+
+              <div>
+                <label className="mb-2 block text-sm font-semibold text-gray-700">
+                  Pesan *
+                </label>
+
+                <textarea
+                  required
+                  rows={6}
+                  value={form.message}
+                  onChange={(e) =>
+                    handleChange('message', e.target.value)
+                  }
+                  placeholder="Tulis pesan Anda..."
+                  className="w-full resize-none rounded-xl border border-gray-300 px-4 py-3 outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100"
+                />
+              </div>
+
+              <button
+                type="submit"
+                className="flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-700 px-5 py-3 font-semibold text-white transition hover:bg-emerald-800"
+              >
+                <Send className="h-5 w-5" />
+                Kirim Pesan
+              </button>
+
+            </form>
+          </div>
+
         </div>
-      </section>
-    </SiteLayout>
+      </div>
+    </main>
   );
 }
