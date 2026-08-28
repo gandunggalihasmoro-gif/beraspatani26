@@ -11,6 +11,7 @@ import {
   Phone,
   UserRound,
   LogIn,
+  MessageCircle,
 } from 'lucide-react';
 
 import type { User } from '@supabase/supabase-js';
@@ -19,6 +20,10 @@ import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 
 import { supabase } from '../../lib/supabase';
+
+/* =========================================================
+   MENU NAVIGASI
+========================================================= */
 
 const navLinks = [
   {
@@ -55,6 +60,27 @@ const navLinks = [
   },
 ];
 
+/* =========================================================
+   DATA KONTAK
+========================================================= */
+
+const PHONE_NUMBER = '081572316412';
+
+const PHONE_LINK = 'tel:+6281572316412';
+
+const WHATSAPP_NUMBER = '6281572316412';
+
+const WHATSAPP_MESSAGE =
+  'Halo BerasPatani26, saya ingin bertanya mengenai produk beras, harga, stok, pemesanan, atau pengiriman.';
+
+const WHATSAPP_LINK = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
+  WHATSAPP_MESSAGE
+)}`;
+
+/* =========================================================
+   NAVBAR
+========================================================= */
+
 export default function Navbar() {
   const pathname = usePathname();
 
@@ -70,9 +96,10 @@ export default function Navbar() {
   const [authLoading, setAuthLoading] =
     useState(true);
 
-  /*
-   * Mendeteksi scroll navbar.
-   */
+  /* =======================================================
+     DETEKSI SCROLL
+  ======================================================= */
+
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 20);
@@ -93,27 +120,41 @@ export default function Navbar() {
     };
   }, []);
 
-  /*
-   * Tutup menu mobile saat pindah halaman.
-   */
+  /* =======================================================
+     TUTUP MENU MOBILE SAAT PINDAH HALAMAN
+  ======================================================= */
+
   useEffect(() => {
     setMobileOpen(false);
   }, [pathname]);
 
-  /*
-   * Cek status login Supabase.
-   */
+  /* =======================================================
+     CEK STATUS LOGIN SUPABASE
+  ======================================================= */
+
   useEffect(() => {
     let mounted = true;
 
     async function checkUser() {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
+      try {
+        const {
+          data: { user },
+        } =
+          await supabase.auth.getUser();
 
-      if (mounted) {
-        setUser(user);
-        setAuthLoading(false);
+        if (mounted) {
+          setUser(user);
+          setAuthLoading(false);
+        }
+      } catch (error) {
+        console.error(
+          'Gagal mengecek user:',
+          error
+        );
+
+        if (mounted) {
+          setAuthLoading(false);
+        }
       }
     }
 
@@ -145,6 +186,10 @@ export default function Navbar() {
     };
   }, []);
 
+  /* =======================================================
+     MENU AKTIF
+  ======================================================= */
+
   const isActive = (
     href: string
   ) => {
@@ -157,8 +202,16 @@ export default function Navbar() {
     );
   };
 
+  /* =======================================================
+     TAMPILAN
+  ======================================================= */
+
   return (
     <>
+      {/* ===================================================
+          HEADER
+      =================================================== */}
+
       <header
         className={cn(
           'fixed left-0 right-0 top-0 z-50 transition-all duration-300',
@@ -172,13 +225,18 @@ export default function Navbar() {
 
           <div className="flex h-16 items-center justify-between">
 
-            {/* LOGO */}
+            {/* =============================================
+                LOGO
+            ============================================= */}
+
             <Link
               href="/"
-              className="flex items-center gap-2 group"
+              className="group flex items-center gap-2"
             >
               <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary text-primary-foreground transition-transform group-hover:scale-105">
+
                 <Wheat className="h-5 w-5" />
+
               </div>
 
               <div className="flex flex-col">
@@ -194,7 +252,10 @@ export default function Navbar() {
               </div>
             </Link>
 
-            {/* MENU DESKTOP */}
+            {/* =============================================
+                MENU DESKTOP
+            ============================================= */}
+
             <nav className="hidden items-center gap-1 lg:flex">
 
               {navLinks.map(
@@ -219,14 +280,20 @@ export default function Navbar() {
                     ) && (
                       <span className="absolute bottom-0 left-1/2 h-0.5 w-6 -translate-x-1/2 rounded-full bg-primary" />
                     )}
+
                   </Link>
                 )
               )}
 
             </nav>
 
-            {/* TOMBOL DESKTOP */}
+            {/* =============================================
+                TOMBOL DESKTOP
+            ============================================= */}
+
             <div className="hidden items-center gap-2 lg:flex">
+
+              {/* FORM MINAT PEMBELIAN */}
 
               <Button
                 asChild
@@ -238,6 +305,8 @@ export default function Navbar() {
                 </Link>
               </Button>
 
+              {/* LOGIN / AKUN */}
+
               {!authLoading && (
                 <>
                   {user ? (
@@ -248,8 +317,11 @@ export default function Navbar() {
                       className="gap-2"
                     >
                       <Link href="/akun">
+
                         <UserRound className="h-4 w-4" />
+
                         Akun Saya
+
                       </Link>
                     </Button>
                   ) : (
@@ -260,8 +332,11 @@ export default function Navbar() {
                       className="gap-2"
                     >
                       <Link href="/login">
+
                         <LogIn className="h-4 w-4" />
+
                         Masuk
+
                       </Link>
                     </Button>
                   )}
@@ -270,7 +345,10 @@ export default function Navbar() {
 
             </div>
 
-            {/* TOMBOL MENU MOBILE */}
+            {/* =============================================
+                TOMBOL MENU MOBILE
+            ============================================= */}
+
             <button
               type="button"
               className="rounded-lg p-2 transition-colors hover:bg-muted lg:hidden"
@@ -293,11 +371,17 @@ export default function Navbar() {
         </div>
       </header>
 
-      {/* MOBILE MENU */}
+      {/* ===================================================
+          MOBILE MENU
+      =================================================== */}
+
       {mobileOpen && (
         <div className="fixed inset-0 z-40 lg:hidden">
 
-          {/* OVERLAY */}
+          {/* ===============================================
+              OVERLAY
+          =============================================== */}
+
           <div
             className="absolute inset-0 bg-black/30 backdrop-blur-sm"
             onClick={() =>
@@ -305,9 +389,15 @@ export default function Navbar() {
             }
           />
 
-          <div className="absolute left-0 right-0 top-16 animate-fade-in border-b border-border bg-background shadow-lg">
+          {/* ===============================================
+              PANEL MENU
+          =============================================== */}
+
+          <div className="absolute left-0 right-0 top-16 max-h-[calc(100vh-4rem)] overflow-y-auto animate-fade-in border-b border-border bg-background shadow-lg">
 
             <nav className="flex flex-col gap-1 px-4 py-4">
+
+              {/* MENU UTAMA */}
 
               {navLinks.map(
                 (link) => (
@@ -329,15 +419,21 @@ export default function Navbar() {
                 )
               )}
 
-              {/* FORM MINAT PEMBELIAN */}
+              {/* ===========================================
+                  FORM MINAT PEMBELIAN
+              =========================================== */}
+
               <Link
                 href="/minat-pembelian"
-                className="mt-2 rounded-lg bg-primary px-4 py-3 text-center text-sm font-semibold text-primary-foreground"
+                className="mt-2 rounded-lg bg-primary px-4 py-3 text-center text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90"
               >
                 Form Minat Pembelian
               </Link>
 
-              {/* LOGIN / AKUN */}
+              {/* ===========================================
+                  LOGIN / AKUN
+              =========================================== */}
+
               {!authLoading && (
                 <>
                   {user ? (
@@ -345,28 +441,57 @@ export default function Navbar() {
                       href="/akun"
                       className="mt-2 flex items-center justify-center gap-2 rounded-lg border border-border px-4 py-3 text-sm font-semibold text-foreground transition-colors hover:bg-muted"
                     >
+
                       <UserRound className="h-4 w-4" />
+
                       Akun Saya
+
                     </Link>
                   ) : (
                     <Link
                       href="/login"
                       className="mt-2 flex items-center justify-center gap-2 rounded-lg border border-border px-4 py-3 text-sm font-semibold text-foreground transition-colors hover:bg-muted"
                     >
+
                       <LogIn className="h-4 w-4" />
+
                       Masuk
+
                     </Link>
                   )}
                 </>
               )}
 
-              {/* TELEPON */}
+              {/* ===========================================
+                  WHATSAPP
+              =========================================== */}
+
               <a
-                href="tel:+6281572316412"
-                className="mt-2 flex items-center justify-center gap-2 rounded-lg border border-border px-4 py-3 text-sm font-medium transition-colors hover:bg-muted"
+                href={WHATSAPP_LINK}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-2 flex items-center justify-center gap-2 rounded-lg bg-[#25D366] px-4 py-3 text-sm font-semibold text-white transition-all hover:opacity-90"
               >
+
+                <MessageCircle className="h-5 w-5" />
+
+                Chat WhatsApp
+
+              </a>
+
+              {/* ===========================================
+                  TELEPON
+              =========================================== */}
+
+              <a
+                href={PHONE_LINK}
+                className="mt-2 flex items-center justify-center gap-2 rounded-lg border border-border px-4 py-3 text-sm font-medium text-foreground transition-colors hover:bg-muted"
+              >
+
                 <Phone className="h-4 w-4" />
-                081572316412
+
+                {PHONE_NUMBER}
+
               </a>
 
             </nav>
